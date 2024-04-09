@@ -1,11 +1,8 @@
 import "./App.css";
+import HeaderAvatar from "./components/HeaderAvatar";
 
 function App() {
-  return (
-    <div>
-      <h1>Under Construction</h1>
-    </div>
-  );
+  return <HeaderAvatar />;
 }
 
 export default App;

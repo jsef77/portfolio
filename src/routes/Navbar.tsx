@@ -1,7 +1,5 @@
 // see: https://mui.com/material-ui/react-breadcrumbs/
 
-import * as React from "react";
-
 import { Outlet, Link } from "react-router-dom";
 
 import { emphasize, styled } from "@mui/material/styles";
@@ -33,15 +31,15 @@ const StyledBreadcrumb = styled(Chip)(({ theme }) => {
   };
 }) as typeof Chip; // TypeScript only: need a type cast here because https://github.com/Microsoft/TypeScript/issues/26591
 
-function handleClick(event: React.MouseEvent<Element, MouseEvent>) {
-  event.preventDefault();
-  console.info("You clicked a breadcrumb.");
-}
+// function handleClick(event: React.MouseEvent<Element, MouseEvent>) {
+//   event.preventDefault();
+//   console.info("You clicked a breadcrumb.");
+// }
 
 export default function CustomizedBreadcrumbs() {
   return (
     <>
-      <div role="presentation" onClick={handleClick}>
+      <div role="presentation">
         <Breadcrumbs aria-label="breadcrumb">
           <Link to="/portfolio/">
             <StyledBreadcrumb

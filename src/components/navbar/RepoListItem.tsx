@@ -1,5 +1,4 @@
 import { styled } from "@mui/material/styles";
-import Paper from "@mui/material/Paper";
 import { RepoResponse } from "./RepoList";
 import { Card, Grow } from "@mui/material";
 

@@ -6,14 +6,13 @@ import Grid from "@mui/material/Grid";
 export interface RepoResponse {
   id: string;
   key: string;
-  full_name: string;
+  name: string;
   html_url: string;
   description: string;
 }
 
 const RepoList = () => {
   const [arrayItems, setArrayItems] = useState([]);
-
   useEffect(() => {
     async function awaitRepos() {
       await fetch(`https://api.github.com/users/jsef77/repos`)
@@ -24,7 +23,7 @@ const RepoList = () => {
               <RepoListItem
                 id={arraySingleItem.id}
                 key={arraySingleItem.id}
-                full_name={arraySingleItem.full_name}
+                name={arraySingleItem.name}
                 html_url={arraySingleItem.html_url}
                 description={arraySingleItem.description}
               />

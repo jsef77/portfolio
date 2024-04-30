@@ -17,7 +17,7 @@ export async function fetchRepoLangs(
   repoName: string,
   asArray: boolean = false
 ) {
-  const langs = await fetch(
+  const res = await fetch(
     `https://api.github.com/repos/jsef77/${repoName}/languages`
   )
     .then((response) => response.json())
@@ -31,10 +31,9 @@ export async function fetchRepoLangs(
             [lang]: data[lang],
           };
           jsonArray.push(l);
-          console.log(jsonArray);
         }
+        return jsonArray;
       }
     });
-
-  return langs;
+  return res;
 }

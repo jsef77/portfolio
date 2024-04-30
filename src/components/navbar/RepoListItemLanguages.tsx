@@ -1,38 +1,101 @@
-import { BarChart } from "@mui/x-charts";
+import { BarChart, BarSeriesType } from "@mui/x-charts";
+import { fetchRepoLangs } from "../../utils/GithubFetch";
+import { useEffect } from "react";
 
-const RepoListItemLanguages = () => {
-  const valueFormatter = (value: number | null) => `${value}%`;
+interface Props {
+  repoName: string;
+}
 
-  const dataset = [
-    {
-      JavaScript: 70,
-      "C#": 30,
-    },
-  ];
+const RepoListItemLanguages = ({ repoName }: Props) => {
+  useEffect(() => {
+    const languageArray: LanguageSeriesType[] = [];
 
-  return (
-    <>
-      <BarChart
-        dataset={dataset}
-        series={[
-          {
-            dataKey: "JavaScript",
-            label: "JavaScript",
-            valueFormatter,
-            stack: "A",
-          },
-          { dataKey: "C#", label: "C#", valueFormatter, stack: "A" },
-        ]}
-        width={600}
-        height={350}
-        layout="horizontal"
-        axisHighlight={{ x: "none", y: "none" }}
-        tooltip={{ trigger: "item" }}
-        bottomAxis={null}
-        leftAxis={null}
-      />
-    </>
-  );
+    function mapSeries(data: Array<Language>) {
+      // DATA IS AN OBJECT. OBJECT CANNOT BE MAPPED
+      console.log(data);
+      if (data != undefined) {
+        data.map((language: Language) => {
+          for (const [name, value] of Object.entries(language)) {
+            const l: LanguageSeriesType = {
+              dataKey: `${name}`,
+              label: `${name}`,
+              type: "bar",
+              stack: "A",
+            };
+            console.log(value);
+            languageArray.push(l);
+          }
+        });
+        return languageArray;
+      } else {
+        throw new Error("apiData is undefined!");
+      }
+    }
+
+    async function awaitAPI() {
+      await fetchRepoLangs(repoName, true).then((apiRes) => {
+        return (
+          <div>
+            <BarChart
+              dataset={apiRes}
+              series={mapSeries(apiRes)}
+              width={600}
+              height={500}
+              layout="horizontal"
+              axisHighlight={{ x: "none", y: "none" }}
+              tooltip={{ trigger: "item" }}
+              bottomAxis={null}
+              leftAxis={null}
+            />
+            <h1>ERROR</h1>
+          </div>
+        );
+        // setApiData(apiRes);
+      });
+      // .then((onSuccess) => {
+      //   return (
+      //     <div>
+      //       <BarChart
+      //         dataset={apiData}
+      //         series={mapSeries(apiData)}
+      //         width={600}
+      //         height={500}
+      //         layout="horizontal"
+      //         axisHighlight={{ x: "none", y: "none" }}
+      //         tooltip={{ trigger: "item" }}
+      //         bottomAxis={null}
+      //         leftAxis={null}
+      //       />
+      //     </div>
+      //   );
+      // });
+    }
+    awaitAPI();
+  }, [repoName]);
+
+  type Language = {
+    [name: string]: number;
+  };
+
+  interface LanguageSeriesType extends BarSeriesType {
+    valueFormatter?: (value: number | null) => `${typeof value}%`;
+  }
+
+  // return (
+  //   <div>
+  //     <BarChart
+  //       dataset={apiData}
+  //       series={mapSeries(apiData)}
+  //       width={600}
+  //       height={500}
+  //       layout="horizontal"
+  //       axisHighlight={{ x: "none", y: "none" }}
+  //       tooltip={{ trigger: "item" }}
+  //       bottomAxis={null}
+  //       leftAxis={null}
+  //     />
+  //   </div>
+  // );
 };
 
 export default RepoListItemLanguages;

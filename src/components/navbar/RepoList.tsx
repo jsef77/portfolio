@@ -9,6 +9,7 @@ export interface RepoResponse {
   name: string;
   html_url: string;
   description: string;
+  language?: string;
 }
 
 const RepoList = () => {
@@ -26,6 +27,7 @@ const RepoList = () => {
                 name={arraySingleItem.name}
                 html_url={arraySingleItem.html_url}
                 description={arraySingleItem.description}
+                language={arraySingleItem.language}
               />
             );
           });

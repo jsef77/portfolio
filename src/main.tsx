@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import CssBaseline from "@mui/material/CssBaseline";
+import { CssBaseline } from "@mui/material";
 import App from "./App.tsx";
 import ErrorPage from "./error-page.tsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
@@ -17,7 +17,8 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <CssBaseline /> <App />
+    <CssBaseline />
+    <App />
     <RouterProvider router={router} />
   </React.StrictMode>
 );

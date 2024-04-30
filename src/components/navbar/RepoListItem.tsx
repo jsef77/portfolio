@@ -1,6 +1,6 @@
 import { styled } from "@mui/material/styles";
 import { RepoResponse } from "./RepoList";
-import { Box, Container, Grow, Paper } from "@mui/material";
+import { Grow, Card, CardContent, Typography } from "@mui/material";
 
 interface Props extends RepoResponse {
   /* Inherited from RepoResponse Interface (determined by Git API JSON response):
@@ -13,7 +13,7 @@ interface Props extends RepoResponse {
 }
 
 const RepoListItem = (props: Props) => {
-  const Item = styled(Paper)(({ theme }) => ({
+  const Item = styled(Card)(({ theme }) => ({
     backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
     ...theme.typography.body2,
     padding: theme.spacing(1),
@@ -28,26 +28,19 @@ const RepoListItem = (props: Props) => {
   return (
     <Grow in={true}>
       <Item elevation={4} square={false}>
-        <Container
-          sx={{
-            alignItems: "center",
-            display: "flex",
-            flexDirection: "column",
-          }}
-        >
-          <Box
-            sx={{
-              maxWidth: "min-content",
-              textWrap: "nowrap",
-            }}
-          >
-            <a rel="noopener noreferrer" href={props.html_url} target="_blank">
-              <h3>{props.name}</h3>
-            </a>
-
-            <Box sx={{ textWrap: "wrap" }}>{props.description}</Box>
-          </Box>
-        </Container>
+        <CardContent>
+          <a rel="noopener noreferrer" href={props.html_url} target="_blank">
+            <Typography variant="h5" gutterBottom>
+              {props.name}
+            </Typography>
+          </a>
+          <Typography sx={{ fontSize: 14 }} variant="subtitle2">
+            {props.language}
+          </Typography>
+          <Typography sx={{ textWrap: "wrap" }} variant="body1">
+            {props.description}
+          </Typography>
+        </CardContent>
       </Item>
     </Grow>
   );

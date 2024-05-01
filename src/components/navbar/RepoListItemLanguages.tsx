@@ -1,83 +1,62 @@
-import { BarChart, BarSeriesType } from "@mui/x-charts";
+import { AllSeriesType, BarChart, ChartContainer } from "@mui/x-charts";
 import { fetchRepoLangs } from "../../utils/GithubFetch";
 import { useEffect, useState } from "react";
 
 interface Props {
   repoName: string;
+  chartHeight: string;
+  chartWidth: string;
 }
 
-const RepoListItemLanguages = ({ repoName }: Props) => {
+const RepoListItemLanguages = ({
+  repoName,
+  chartHeight,
+  chartWidth,
+}: Props) => {
   const [barChart, setBarChart] = useState(<>Error</>);
   useEffect(() => {
-    const languageSeries: LanguageSeriesType[] = [];
+    function mapSeries(data: object) {
+      const series = [];
 
-    function mapSeries(data: Array<Language>) {
-      if (data != undefined) {
-        data.map((language: Language) => {
-          for (const [name, value] of Object.entries(language)) {
-            const l: LanguageSeriesType = {
-              dataKey: `${name}`,
-              label: `${name}`,
-              type: "bar",
-              stack: "A",
-            };
-            console.log(value);
-            languageSeries.push(l);
-          }
+      for (const [key, val] of Object.entries(data)) {
+        series.push({
+          type: "bar",
+          data: [val],
+          label: key as string,
+          stack: "A",
         });
-        console.log(languageSeries);
-        console.log(data);
-
-        return languageSeries;
-      } else {
-        throw new Error("apiData is undefined!");
       }
+
+      return series;
     }
 
-    function mapDataSet(data: Array<Language>) {
-      const dataSet: Array<Object> = [];
-      const dataSubSet = {};
-
-      data.map((l) => {
-        let x = Object.keys(l)[0];
-        dataSubSet[x] = l[x];
-      });
-
-      return data;
+    function plotBarGraph(data: object[]) {
+      return (
+        <ChartContainer
+          height={200}
+          width={200}
+          series={data as AllSeriesType[]}
+        >
+          <BarChart
+            series={data} // [{dataKey: "CSS", label: "CSS", stack: "A"}]
+            layout="horizontal"
+            tooltip={{ trigger: "item" }}
+            bottomAxis={null}
+            leftAxis={null}
+            slotProps={{ legend: { hidden: true }, bar: {} }}
+          />
+        </ChartContainer>
+      );
     }
 
     async function awaitAPI() {
-      await fetchRepoLangs(repoName, true)
-        .then((apiRes) => {
-          return (
-            <div>
-              <BarChart
-                dataset={mapDataSet(apiRes)}
-                series={mapSeries(apiRes)}
-                width={600}
-                height={500}
-                layout="horizontal"
-                axisHighlight={{ x: "none", y: "none" }}
-                tooltip={{ trigger: "item" }}
-                bottomAxis={null}
-                leftAxis={null}
-              />
-              <h1>ERROR</h1>
-            </div>
-          );
-        })
-        .then((chart) => setBarChart(chart));
+      await fetchRepoLangs(repoName)
+        .then((apiRes) => mapSeries(apiRes))
+        .then((series) => plotBarGraph(series))
+        .then((graph) => setBarChart(graph));
     }
     awaitAPI();
-  }, [repoName]);
-
-  type Language = {
-    [name: string]: number;
-  };
-
-  interface LanguageSeriesType extends BarSeriesType {
-    valueFormatter?: (value: number | null) => `${typeof value}%`;
-  }
+  }, [repoName, chartHeight, chartWidth]);
 
   return <div>{barChart}</div>;
 };

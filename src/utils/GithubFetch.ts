@@ -7,33 +7,18 @@
 //   language?: string;
 // }
 
-import { Language } from "@mui/icons-material";
+// type Language<T = number> = {
+//     [key: string]: T;
+//   };
 
-export type Language = {
-  [name: string]: number;
-};
-
-export async function fetchRepoLangs(
-  repoName: string,
-  asArray: boolean = false
-) {
+export async function fetchRepoLangs(repoName: string) {
   const res = await fetch(
     `https://api.github.com/repos/jsef77/${repoName}/languages`
   )
     .then((response) => response.json())
     .then((data) => {
-      if (!asArray) {
-        return data;
-      } else {
-        const jsonArray = [];
-        for (const lang in data) {
-          const l: Language = {
-            [lang]: data[lang],
-          };
-          jsonArray.push(l);
-        }
-        return jsonArray;
-      }
+      console.log(data);
+      return data;
     });
   return res;
 }

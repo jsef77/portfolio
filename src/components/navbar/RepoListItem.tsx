@@ -1,6 +1,7 @@
 import { styled } from "@mui/material/styles";
 import { RepoResponse } from "./RepoList";
 import { Grow, Card, CardContent, Typography } from "@mui/material";
+import RepoListItemLanguages from "./RepoListItemLanguages";
 
 interface Props extends RepoResponse {
   /* Inherited from RepoResponse Interface (determined by Git API JSON response):
@@ -34,9 +35,11 @@ const RepoListItem = (props: Props) => {
               {props.name}
             </Typography>
           </a>
-          <Typography sx={{ fontSize: 14 }} variant="subtitle2">
-            {props.language}
-          </Typography>
+          <RepoListItemLanguages
+            repoName={props.name}
+            chartHeight="10rem"
+            chartWidth="inherit"
+          />
           <Typography sx={{ textWrap: "wrap" }} variant="body1">
             {props.description}
           </Typography>

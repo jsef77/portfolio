@@ -17,7 +17,20 @@ const RepoList = () => {
   useEffect(() => {
     async function awaitRepos() {
       await fetch(`https://api.github.com/users/jsef77/repos`)
-        .then((response) => response.json())
+        .then((response) => {
+          if (!response.ok) {
+            switch (response.status) {
+              case 403:
+                throw new Error("403");
+            }
+          } else {
+            return response;
+          }
+        })
+        .then((response) => {
+          const res = response as Response;
+          return res.json();
+        })
         .then((data) => {
           const items = data.map((arraySingleItem: RepoResponse) => {
             return (
@@ -32,6 +45,13 @@ const RepoList = () => {
             );
           });
           setArrayItems(items);
+        })
+        .catch((err) => {
+          switch (err) {
+            case "403":
+              console.error("403 Error! Likely rate limit exceeded");
+          }
+          console.log(err);
         });
     }
     awaitRepos();
@@ -49,7 +69,7 @@ const RepoList = () => {
         spacing={{ xs: 2, md: 3 }}
         columns={{ xs: 4, sm: 8, md: 12 }}
       >
-        {arrayItems}
+        {arrayItems.length > 0 ? arrayItems : <h5>Error!</h5>}
       </Grid>
     </>
   );
